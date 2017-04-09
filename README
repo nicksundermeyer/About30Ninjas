@@ -1,0 +1,1 @@
+This project is meant to work as a local multiplayer game with two controllers plugged into the same computer. It is currently setup with the first player using the keyboard/mouse and the second player using the second controller plugged in, but can also change the keyboard to the first controller if a controller is available.
