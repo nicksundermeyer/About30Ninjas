@@ -6,7 +6,7 @@ public class PlayerController : MonoBehaviour {
 
     public int speed;
     public string controlInput;
-    public int player;
+    public int controller;
     public Camera camera;
 
     private float xMove, yMove, xRot, yRot;
@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        
+        transform.position = new Vector3(0, 0, 0);
 	}
 	
 	// Update is called once per frame
@@ -26,8 +26,8 @@ public class PlayerController : MonoBehaviour {
     void movePlayer()
     {
         // get axis of movement (either keyboard or mouse)
-        xMove = Input.GetAxis(controlInput + player + "_Horizontal");
-        yMove = Input.GetAxis(controlInput + player + "_Vertical");
+        xMove = Input.GetAxis(controlInput + controller + "_Horizontal");
+        yMove = Input.GetAxis(controlInput + controller + "_Vertical");
 
         // fix inversion of stick
         if(controlInput == "Controller")
@@ -54,8 +54,8 @@ public class PlayerController : MonoBehaviour {
         {
             // rotate in direction of controller right stick
 
-            xRot = Input.GetAxis(controlInput + player + "_RHorizontal");
-            yRot = Input.GetAxis(controlInput + player + "_RVertical");
+            xRot = Input.GetAxis(controlInput + controller + "_RHorizontal");
+            yRot = Input.GetAxis(controlInput + controller + "_RVertical");
 
             // if rotation is not in any direction, rotate in direction of movement
             if (xRot == 0 && yRot == 0)

@@ -1,1 +1,4 @@
 This project is meant to work as a local multiplayer game with two controllers plugged into the same computer. It is currently setup with the first player using the keyboard/mouse and the second player using the second controller plugged in, but can also change the keyboard to the first controller if a controller is available.
+
+Achievement 1: the enemy added is the second player who is controlled by the other controller. Also added a small square sprite that I eventually want to turn into a pickup ability for the players
+Achievement 2: the core gameplay element that I added was the ability to have multiple players with different controllers, as well as the twin stick rotation to the character
