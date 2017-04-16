@@ -12,13 +12,24 @@ public class PlayerController : MonoBehaviour {
     private float xMove, yMove, xRot, yRot;
     private float rotAngle;
 
+    // strings to hold input names
+    private string horizontal;
+    private string vertical;
+    private string rHorizontal;
+    private string rVertical;
+
 	// Use this for initialization
-	void Start () {
-        transform.position = new Vector3(0, 0, 0);
+	void Start () 
+    {
+        horizontal = controlInput + controller + "_Horizontal";
+        vertical = controlInput + controller + "_Vertical";
+        rHorizontal = controlInput + controller + "_RHorizontal";
+        rVertical = controlInput + controller + "_RVertical";
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update () 
+    {
         movePlayer();
         rotatePlayer();
 	}
@@ -26,14 +37,8 @@ public class PlayerController : MonoBehaviour {
     void movePlayer()
     {
         // get axis of movement (either keyboard or mouse)
-        xMove = Input.GetAxis(controlInput + controller + "_Horizontal");
-        yMove = Input.GetAxis(controlInput + controller + "_Vertical");
-
-        // fix inversion of stick
-        if(controlInput == "Controller")
-        {
-            yMove *= -1;
-        }
+        xMove = Input.GetAxis(horizontal);
+        yMove = Input.GetAxis(vertical);
 
         transform.Translate(new Vector3(xMove * Time.deltaTime * speed, 0, 0), Space.World);
         transform.Translate(new Vector3(0, yMove * Time.deltaTime * speed, 0), Space.World);
@@ -54,8 +59,8 @@ public class PlayerController : MonoBehaviour {
         {
             // rotate in direction of controller right stick
 
-            xRot = Input.GetAxis(controlInput + controller + "_RHorizontal");
-            yRot = Input.GetAxis(controlInput + controller + "_RVertical");
+            xRot = Input.GetAxis(rHorizontal);
+            yRot = Input.GetAxis(rVertical);
 
             // if rotation is not in any direction, rotate in direction of movement
             if (xRot == 0 && yRot == 0)
