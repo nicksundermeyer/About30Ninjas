@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
 
-    public int speed;
+    public float speed;
     public string controlInput;
-    public int controller;
+    public int controller, acceleration;
     public Camera camera;
 
     private float xMove, yMove, xRot, yRot;
     private float rotAngle;
+    private Rigidbody2D rb;
 
     // strings to hold input names
     private string horizontal;
@@ -25,23 +26,34 @@ public class PlayerController : MonoBehaviour {
         vertical = controlInput + controller + "_Vertical";
         rHorizontal = controlInput + controller + "_RHorizontal";
         rVertical = controlInput + controller + "_RVertical";
+
+        rb = GetComponent<Rigidbody2D>();
 	}
 	
 	// Update is called once per frame
 	void Update () 
     {
-        movePlayer();
-        rotatePlayer();
-	}
-
-    void movePlayer()
-    {
         // get axis of movement (either keyboard or mouse)
         xMove = Input.GetAxis(horizontal);
         yMove = Input.GetAxis(vertical);
 
-        transform.Translate(new Vector3(xMove * Time.deltaTime * speed, 0, 0), Space.World);
-        transform.Translate(new Vector3(0, yMove * Time.deltaTime * speed, 0), Space.World);
+//        transform.Translate(new Vector3(xMove * Time.deltaTime * speed, 0, 0), Space.World);
+//        transform.Translate(new Vector3(0, yMove * Time.deltaTime * speed, 0), Space.World);
+
+        rotatePlayer();
+
+	}
+
+    void FixedUpdate()
+    {
+        rb.AddForce(new Vector3(xMove * acceleration, 0, 0));
+        rb.AddForce(new Vector3(0, yMove * acceleration, 0));
+
+        // keeping below max speed
+        if (rb.velocity.magnitude > (speed))
+        {
+            rb.velocity = rb.velocity.normalized * (speed);
+        }
     }
 
     void rotatePlayer()
