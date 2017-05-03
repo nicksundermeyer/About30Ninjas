@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class SwordController : MonoBehaviour 
 {
-    public float parryTime;
+    public float damage;
     public ParticleSystem ps;
+    public GameObject otherPlayer;
 
     private PlayerController parentController;
     private Vector3 playerRot;
@@ -71,6 +72,13 @@ public class SwordController : MonoBehaviour
                 ps.Play();
             }
         }
+        else if (obj == otherPlayer)
+        {
+            if (animator.GetCurrentAnimatorStateInfo(0).IsName("Left Strike") || animator.GetCurrentAnimatorStateInfo(0).IsName("Right Strike"))
+            {
+                otherPlayer.GetComponent<PlayerController>().takeDamage(damage);
+            }
+        }
     }
 
     // function to trigger swinging animations
@@ -81,11 +89,11 @@ public class SwordController : MonoBehaviour
         fire2Up();
 
         // resetting booleans to finish animations
-        if (Time.time - trigger1Time > 0.8)
+        if (Time.time - trigger1Time > 0.9)
         {
             animator.SetBool("LeftStrike", false);
         }
-        if (Time.time - trigger2Time > 0.8)
+        if (Time.time - trigger2Time > 0.9)
         {
             animator.SetBool("RightStrike", false);
         }

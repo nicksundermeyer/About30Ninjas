@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour {
 
@@ -8,9 +10,14 @@ public class PlayerController : MonoBehaviour {
     public string controlInput;
     public int controller, acceleration;
     public Camera camera;
+    public float health;
+    public Slider healthSlider;
+    public Text winText;
+    public GameObject otherPlayer;
 
     private float xMove, yMove, xRot, yRot;
     private float rotAngle;
+    private Vector3 vecToOpponent;
     private Rigidbody2D rb;
 
     // strings to hold input names
@@ -33,26 +40,49 @@ public class PlayerController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
     {
+        vecToOpponent = otherPlayer.transform.position - transform.position;
+
         // get axis of movement (either keyboard or mouse)
         xMove = Input.GetAxis(horizontal);
         yMove = Input.GetAxis(vertical);
 
-//        transform.Translate(new Vector3(xMove * Time.deltaTime * speed, 0, 0), Space.World);
-//        transform.Translate(new Vector3(0, yMove * Time.deltaTime * speed, 0), Space.World);
-
         rotatePlayer();
-
 	}
 
     void FixedUpdate()
     {
-        rb.AddForce(new Vector3(xMove * acceleration, 0, 0));
-        rb.AddForce(new Vector3(0, yMove * acceleration, 0));
-
-        // keeping below max speed
-        if (rb.velocity.magnitude > (speed))
+        if (vecToOpponent.magnitude < 5)
         {
-            rb.velocity = rb.velocity.normalized * (speed);
+            rb.AddForce(new Vector3(xMove * (acceleration-150), 0, 0));
+            rb.AddForce(new Vector3(0, yMove * (acceleration-150), 0));
+
+            // keeping below max speed
+            if (rb.velocity.magnitude > (speed/2))
+            {
+                rb.velocity = rb.velocity.normalized * (speed/2);
+            }
+        }
+        else
+        {
+            rb.AddForce(new Vector3(xMove * acceleration, 0, 0));
+            rb.AddForce(new Vector3(0, yMove * acceleration, 0));
+
+            // keeping below max speed
+            if (rb.velocity.magnitude > (speed))
+            {
+                rb.velocity = rb.velocity.normalized * (speed);
+            }
+        }
+    }
+
+    public void takeDamage(float damage)
+    {
+        health -= damage;
+        healthSlider.value = health/100;
+
+        if (health <= 0)
+        {
+            winText.text = otherPlayer.name + " Wins!";
         }
     }
 

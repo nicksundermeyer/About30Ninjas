@@ -1,4 +1,16 @@
-This project is meant to work as a local multiplayer game with two controllers plugged into the same computer. It is currently setup with the first player using the keyboard/mouse and the second player using the second controller plugged in, but can also change the keyboard to the first controller if a controller is available.
+Setup to be played with keyboard+mouse and an xbox controller on Mac
+Other setups may work incorrectly, I’ve been having issues with the input manager cross-platform and with different controllers
 
-Achievement 1: the enemy added is the second player who is controlled by the other controller. Also added a small square sprite that I eventually want to turn into a pickup ability for the players
-Achievement 2: the core gameplay element that I added was the ability to have multiple players with different controllers, as well as the twin stick rotation to the character
+Controls:
+
+Keyboard:
+WASD to move
+Mouse to aim
+Mouse left and right to attack left and right
+Q and E to parry left and right
+
+Controller:
+LS to move
+RS to aim
+LT and RT to attack left and right
+LB and RB to parry left and right
