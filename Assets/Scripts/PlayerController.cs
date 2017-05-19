@@ -11,9 +11,8 @@ public class PlayerController : MonoBehaviour {
     public int controller, acceleration;
     public Camera camera;
     public float health;
-    public Slider healthSlider;
-    public Text winText;
     public GameObject otherPlayer;
+    public AudioSource grunt;
 
     private float xMove, yMove, xRot, yRot;
     private float rotAngle;
@@ -29,10 +28,10 @@ public class PlayerController : MonoBehaviour {
 	// Use this for initialization
 	void Start () 
     {
-        horizontal = controlInput + controller + "_Horizontal";
-        vertical = controlInput + controller + "_Vertical";
-        rHorizontal = controlInput + controller + "_RHorizontal";
-        rVertical = controlInput + controller + "_RVertical";
+        horizontal = controlInput + " " + controller + " - LS Horizontal";
+        vertical = controlInput + " " + controller + " - LS Vertical";
+        rHorizontal = controlInput + " " + controller + " - RS Horizontal";
+        rVertical = controlInput + " " + controller + " - RS Vertical";
 
         rb = GetComponent<Rigidbody2D>();
 	}
@@ -78,12 +77,7 @@ public class PlayerController : MonoBehaviour {
     public void takeDamage(float damage)
     {
         health -= damage;
-        healthSlider.value = health/100;
-
-        if (health <= 0)
-        {
-            winText.text = otherPlayer.name + " Wins!";
-        }
+        grunt.Play();
     }
 
     void rotatePlayer()

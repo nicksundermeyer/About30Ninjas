@@ -7,16 +7,18 @@ public class SwordController : MonoBehaviour
     public float damage;
     public ParticleSystem ps;
     public GameObject otherPlayer;
+    public AudioSource recoil;
+    public AudioSource swing;
 
     private PlayerController parentController;
     private Vector3 playerRot;
     private Animator animator;
 
     // inputs
-    private string fire1;
-    private string fire2;
-    private string fire3;
-    private string fire4;
+    private string leftAttack;
+    private string rightAttack;
+    private string leftParry;
+    private string rightParry;
 
     // booleans used to check if triggers are being pressed or released for the first time
     private bool trigger1Down; 
@@ -24,10 +26,8 @@ public class SwordController : MonoBehaviour
     private bool trigger2Down; 
     private bool trigger2Up;
 
-    // floats to track time for animations
-    private float trigger1Time;
-    private float trigger2Time;
-    private float recoilTime;
+    // double to track animation time
+    private double endTime;
 
 	// Use this for initialization
 	void Start () 
@@ -35,16 +35,16 @@ public class SwordController : MonoBehaviour
         parentController = transform.parent.GetComponent<PlayerController>();
         animator = GetComponent<Animator>();
 
-        fire1 = parentController.controlInput + parentController.controller + "_Fire1";
-        fire2 = parentController.controlInput + parentController.controller + "_Fire2";
-        fire3 = parentController.controlInput + parentController.controller + "_Fire3";
-        fire4 = parentController.controlInput + parentController.controller + "_Fire4";
+        leftAttack = parentController.controlInput + " " + parentController.controller + " - Attack Left";
+        rightAttack = parentController.controlInput + " " + parentController.controller + " - Attack Right";
+        leftParry = parentController.controlInput + " " + parentController.controller + " - Parry Left";
+        rightParry = parentController.controlInput + " " + parentController.controller + " - Parry Right";
 
         trigger1Down = false;
         trigger1Up = false;
         trigger2Down = false;
         trigger2Up = false;
-	}
+    }
 	
 	// Update is called once per frame
 	void Update () 
@@ -60,16 +60,18 @@ public class SwordController : MonoBehaviour
 
         if (obj.tag == "Sword")
         {
-            // if left strike collides with right parry, recoil
+            // if left strike collides with right parry, recoil and play recoil sound
             if (animator.GetCurrentAnimatorStateInfo(0).IsName("Left Strike") && colAnim.GetCurrentAnimatorStateInfo(0).IsName("Right Parry"))
             {
                 animator.SetTrigger("LeftRecoilTrigger");
                 ps.Play();
+                recoil.Play();
             }
             if (animator.GetCurrentAnimatorStateInfo(0).IsName("Right Strike") && colAnim.GetCurrentAnimatorStateInfo(0).IsName("Left Parry"))
             {
                 animator.SetTrigger("RightRecoilTrigger");
                 ps.Play();
+                recoil.Play();
             }
         }
         else if (obj == otherPlayer)
@@ -88,47 +90,64 @@ public class SwordController : MonoBehaviour
         fire1Up();
         fire2Up();
 
-        // resetting booleans to finish animations
-        if (Time.time - trigger1Time > 0.9)
-        {
-            animator.SetBool("LeftStrike", false);
-        }
-        if (Time.time - trigger2Time > 0.9)
-        {
-            animator.SetBool("RightStrike", false);
-        }
-
         // checking for trigger presses
         if (fire1Down() && !animator.GetCurrentAnimatorStateInfo(0).IsName("Left Strike"))
         {
-            trigger1Time = Time.time;
-            animator.SetBool("LeftStrike", true);
+            StartCoroutine(delayedSound(swing, 0.05));
+            StartCoroutine(setAnimBool("LeftStrike", 0.9));
         }
         else if (fire2Down() && !animator.GetCurrentAnimatorStateInfo(0).IsName("Right Strike"))
         {
-            trigger2Time = Time.time;
-            animator.SetBool("RightStrike", true);
+            StartCoroutine(delayedSound(swing, 0.05));
+            StartCoroutine(setAnimBool("RightStrike", 0.9));
         }
 
         // checking for button press, setting integers to trigger animations
-        if (Input.GetButtonDown(fire3))
+        if (Input.GetButtonDown(leftParry))
         {
             animator.SetBool("LeftParry", true);
         }
-        else if (Input.GetButtonDown(fire4))
+        else if (Input.GetButtonDown(rightParry))
         {
             animator.SetBool("RightParry", true);
         }
 
-        if (Input.GetButtonUp(fire3))
+        if (Input.GetButtonUp(leftParry))
         {
             animator.SetBool("LeftParry", false);
         }
-        else if (Input.GetButtonUp(fire4))
+        else if (Input.GetButtonUp(rightParry))
         {
             animator.SetBool("RightParry", false);
         }
     
+    }
+
+    // coroutine to play swinging sword sound after a short delay
+    private IEnumerator delayedSound(AudioSource source, double delay)
+    {
+        endTime = Time.time + delay;
+
+        while (Time.time < endTime)
+        {
+            yield return null;
+        }
+
+        source.Play();
+    }
+
+    // coroutine to set animation triggers for proper timing
+    private IEnumerator setAnimBool(string name, double delay)
+    {
+        endTime = Time.time + delay;
+
+        while (Time.time < endTime)
+        {
+            animator.SetBool(name, true);
+            yield return null;
+        }
+
+        animator.SetBool(name, false);
     }
 
     // helper function to check if fire1 gets pressed down
@@ -136,7 +155,7 @@ public class SwordController : MonoBehaviour
     {
         if (parentController.controlInput == "Controller")
         {
-            if (Input.GetAxis(fire1) > 0 && !trigger1Down)
+            if (Input.GetAxis(leftAttack) > 0 && !trigger1Down)
             {
                 trigger1Down = true;
                 trigger1Up = false;
@@ -146,7 +165,7 @@ public class SwordController : MonoBehaviour
         }
         else if (parentController.controlInput == "Keyboard")
         {
-            return Input.GetButtonDown("Keyboard1_Fire1");
+            return Input.GetButtonDown(leftAttack);
         }
 
         return false;
@@ -157,7 +176,7 @@ public class SwordController : MonoBehaviour
     {
         if (parentController.controlInput == "Controller")
         {
-            if (Input.GetAxis(fire1) < 0 && !trigger1Up)
+            if (Input.GetAxis(leftAttack) < 0 && !trigger1Up)
             {
                 trigger1Down = false;
                 trigger1Up = true;
@@ -167,7 +186,7 @@ public class SwordController : MonoBehaviour
         }
         else if (parentController.controlInput == "Keyboard")
         {
-            return Input.GetButtonUp("Keyboard1_Fire1");
+            return Input.GetButtonUp(leftAttack);
         }
 
         return false;
@@ -178,7 +197,7 @@ public class SwordController : MonoBehaviour
     {
         if (parentController.controlInput == "Controller")
         {
-            if (Input.GetAxis(fire2) > 0 && !trigger2Down)
+            if (Input.GetAxis(rightAttack) > 0 && !trigger2Down)
             {
                 trigger2Down = true;
                 trigger2Up = false;
@@ -188,7 +207,7 @@ public class SwordController : MonoBehaviour
         }
         else if (parentController.controlInput == "Keyboard")
         {
-            return Input.GetButtonDown("Keyboard1_Fire2");
+            return Input.GetButtonDown(rightAttack);
         }
 
         return false;
@@ -199,7 +218,7 @@ public class SwordController : MonoBehaviour
     {
         if (parentController.controlInput == "Controller")
         {
-            if (Input.GetAxis(fire2) < 0 && !trigger2Up)
+            if (Input.GetAxis(rightAttack) < 0 && !trigger2Up)
             {
                 trigger2Down = false;
                 trigger2Up = true;
@@ -209,7 +228,7 @@ public class SwordController : MonoBehaviour
         }
         else if (parentController.controlInput == "Keyboard")
         {
-            return Input.GetButtonUp("Keyboard1_Fire2");
+            return Input.GetButtonUp(rightAttack);
         }
 
         return false;
