@@ -9,7 +9,8 @@ public class UIController : MonoBehaviour {
     public Slider player1Health;
     public Slider player2Health;
     public Text winText;
-    public Button restartButton;
+    public GameObject WinScreen;
+    public ScoreManager scoreManager;
 
     private GameObject player1;
     private GameObject player2;
@@ -21,8 +22,6 @@ public class UIController : MonoBehaviour {
 
         player1 = GameObject.Find("Player 1");
         player2 = GameObject.Find("Player 2");
-
-        restartButton.gameObject.SetActive(false);
 	}
 	
 	// Update is called once per frame
@@ -32,34 +31,53 @@ public class UIController : MonoBehaviour {
             isPause = !isPause;
         }
 
-        if (isPause)
-        {
-            Time.timeScale = 0;
-        }
-        else
-        {
-            Time.timeScale = 1;
-        }
-
         player1Health.value = player1.GetComponent<PlayerController>().health / 100;
         player2Health.value = player2.GetComponent<PlayerController>().health / 100;
 
         if (player1Health.value <= 0)
         {
+            if(!isPause)
+                ScoreManager.player2++;
+
             isPause = true;
-            winText.text = "Player 2 Wins!";
-            restartButton.gameObject.SetActive(true);
+            winText.text = "Point to Player 2";
+            WinScreen.SetActive(true);
         }
         else if(player2Health.value <= 0)
         {
+            if(!isPause)
+                ScoreManager.player1++;
+
             isPause = true;
-            winText.text = "Player 1 Wins!";
-            restartButton.gameObject.SetActive(true);
+            winText.text = "Point to Player 1";
+            WinScreen.SetActive(true);
         }
     }
 
     public void restartScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    // function to load scene by index
+    public void LoadByIndex(int index)
+    {
+        SceneManager.LoadScene(index);
+    }
+
+    // function to quit game
+    public void Quit()
+    {
+        Application.Quit();
+    }
+
+    public void changeVolume()
+    {
+
+    }
+
+    public void checkController()
+    {
+        
     }
 }

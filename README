@@ -1,18 +1,15 @@
-Notes on Milestone 3:
-* game mechanics - sword fighting is the mechanic, implemented striking and parrying on both sides of the two players with multiple inputs
-* finalized art - everything has art
-* animations - animation system tied to the attack/parry system of the gameplay, in addition to interrupting and recoiling from strikes
-* sound effects and music - background music, effects for attacking, blocking, striking
-* scene transitions - main menu screen, which can either quit or transition to main game screen. when game ends, has option to restart scene
-* additional levels - not needed, arena-brawler type game
-* ai - my game didn’t need ai per se because the two players fight each other, so I instead just implemented some little bugs that run around underfoot randomly. Doesn’t affect gameplay but just a visual thing to fulfill the requirement
-* coroutines - coroutines used for animating sword strikes, playing sounds, and the bug movement
-* ui - there is a ui
+Notes on Milestone 4:
+* Saving and Loading: You can save and load the game settings (volume and type of controller) across games with buttons in the main menu.
+* Particles: have five particle systems (main menu, swords, end screen)
+* Tweening: gravity in main menu, tweening on swords for swinging and parrying animations
+* Juicy: Added some juice with sword trails and particles/sounds when swords clash
+* Playable in 3-5 mins: Added two more levels and a score system that keeps track of who wins each round and does a best-of-three at the end for an overall winner.
+* Behavior tree: used behavior tree for bugs underfoot, I originally tried to make the second player be an NPC to fight against but I wasn’t able to make the other player actually fight in a reasonable manner that wasn’t totally random and not useful
 
-Setup to be played with keyboard+mouse and an xbox controller on Mac
+The first scene that should be loaded is “Main Menu”
+
+Setup to be played with keyboard+mouse and a ps3 controller on Mac
 Other setups may work incorrectly, I’ve been having issues with the input manager cross-platform and with different controllers
-
-I realize this is a hard type of game to test with only one player, but hopefully you will still be able to get what I’m going for with the pvp combat and parrying mechanics even if you can’t fully play the game by yourself.
 
 Controls:
 

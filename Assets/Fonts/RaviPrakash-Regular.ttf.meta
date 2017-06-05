@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 1560f70278aca4427abacb2f42a44904
+timeCreated: 1495730890
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Ravi Prakash
+  fontNames:
+  - Ravi Prakash
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

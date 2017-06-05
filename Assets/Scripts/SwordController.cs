@@ -9,6 +9,7 @@ public class SwordController : MonoBehaviour
     public GameObject otherPlayer;
     public AudioSource recoil;
     public AudioSource swing;
+    public GameObject SwordTrail;
 
     private PlayerController parentController;
     private Vector3 playerRot;
@@ -139,6 +140,7 @@ public class SwordController : MonoBehaviour
     // coroutine to set animation triggers for proper timing
     private IEnumerator setAnimBool(string name, double delay)
     {
+        SwordTrail.SetActive(true);
         endTime = Time.time + delay;
 
         while (Time.time < endTime)
@@ -148,6 +150,7 @@ public class SwordController : MonoBehaviour
         }
 
         animator.SetBool(name, false);
+        SwordTrail.SetActive(false);
     }
 
     // helper function to check if fire1 gets pressed down
@@ -155,7 +158,7 @@ public class SwordController : MonoBehaviour
     {
         if (parentController.controlInput == "Controller")
         {
-            if (Input.GetAxis(leftAttack) > 0 && !trigger1Down)
+            if ((Input.GetAxis(leftAttack) > 0 || Input.GetButton(leftAttack)) && !trigger1Down)
             {
                 trigger1Down = true;
                 trigger1Up = false;
@@ -176,7 +179,7 @@ public class SwordController : MonoBehaviour
     {
         if (parentController.controlInput == "Controller")
         {
-            if (Input.GetAxis(leftAttack) < 0 && !trigger1Up)
+            if ((Input.GetAxis(leftAttack) < 0 || Input.GetButtonUp(leftAttack)) && !trigger1Up)
             {
                 trigger1Down = false;
                 trigger1Up = true;
@@ -197,7 +200,7 @@ public class SwordController : MonoBehaviour
     {
         if (parentController.controlInput == "Controller")
         {
-            if (Input.GetAxis(rightAttack) > 0 && !trigger2Down)
+            if ((Input.GetAxis(rightAttack) > 0 || Input.GetButton(rightAttack)) && !trigger2Down)
             {
                 trigger2Down = true;
                 trigger2Up = false;
@@ -218,7 +221,7 @@ public class SwordController : MonoBehaviour
     {
         if (parentController.controlInput == "Controller")
         {
-            if (Input.GetAxis(rightAttack) < 0 && !trigger2Up)
+            if ((Input.GetAxis(rightAttack) < 0 || Input.GetButtonUp(rightAttack)) && !trigger2Up)
             {
                 trigger2Down = false;
                 trigger2Up = true;

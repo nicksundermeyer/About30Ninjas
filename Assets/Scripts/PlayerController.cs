@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour {
     public Camera camera;
     public float health;
     public GameObject otherPlayer;
+    public GameObject player1;
+    public GameObject player2;
     public AudioSource grunt;
 
     private float xMove, yMove, xRot, yRot;
@@ -25,9 +27,17 @@ public class PlayerController : MonoBehaviour {
     private string rHorizontal;
     private string rVertical;
 
+    private GameModel saveManager;
+    private PlayerController player1Script;
+    private PlayerController player2Script;
+
 	// Use this for initialization
 	void Start () 
     {
+        saveManager = GameObject.Find("SaveManager").GetComponent<GameModel>();
+        player1Script = GameObject.Find("Player 1").GetComponent<PlayerController>();
+        player2Script = GameObject.Find("Player 2").GetComponent<PlayerController>();
+
         horizontal = controlInput + " " + controller + " - LS Horizontal";
         vertical = controlInput + " " + controller + " - LS Vertical";
         rHorizontal = controlInput + " " + controller + " - RS Horizontal";
@@ -39,6 +49,23 @@ public class PlayerController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
     {
+        if (saveManager.twoControllers)
+        {
+            player1Script.controlInput = "Controller";
+            player1Script.controller = 1;
+
+            player2Script.controlInput = "Controller";
+            player2Script.controller = 2;
+        }
+        else
+        {
+            player1Script.controlInput = "Keyboard";
+            player1Script.controller = 1;
+
+            player2Script.controlInput = "Controller";
+            player2Script.controller = 1;
+        }
+
         vecToOpponent = otherPlayer.transform.position - transform.position;
 
         // get axis of movement (either keyboard or mouse)
